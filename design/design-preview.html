@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grocery Manager — Design Preview v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0e0e0e;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    padding: 64px 40px 80px;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .page-header h1 {
+    font-size: 10px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+  }
+
+  .screens-row {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .screen-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .screen-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+  }
+
+  /* ── iPhone Frame ─────────────────────── */
+  .phone-frame {
+    width: 280px;
+    height: 594px;
+    background: #1a1a1a;
+    border-radius: 48px;
+    padding: 10px;
+    box-shadow:
+      0 0 0 1px #252525,
+      0 60px 120px rgba(0,0,0,0.85),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dyn-island {
+    position: absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    width: 76px; height: 22px;
+    background: #1a1a1a;
+    border-radius: 16px;
+    z-index: 20;
+  }
+
+  /* ── Status bar ───────────────────────── */
+  .status-bar {
+    height: 46px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 24px 8px;
+    justify-content: space-between;
+  }
+  .status-time { font-size: 11px; font-weight: 600; color: #0D0D0D; }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+
+  /* ── Header — clean, spacious ─────────── */
+  .header {
+    padding: 2px 24px 20px;
+    flex-shrink: 0;
+  }
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0D0D0D;
+    letter-spacing: -0.8px;
+    line-height: 1.05;
+  }
+  .page-meta {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .page-meta strong { color: #0D0D0D; font-weight: 600; }
+
+  /* ── Slim tab chips ───────────────────── */
+  .tab-row {
+    display: flex;
+    gap: 6px;
+    padding: 0 24px 18px;
+    flex-shrink: 0;
+  }
+  .tab {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: default;
+    font-family: 'Poppins', sans-serif;
+    border: 1.5px solid transparent;
+  }
+  .tab-on  { background: #0D0D0D; color: #FF3B30; }
+  .tab-off { background: transparent; color: #bbb; border-color: #E8E8E8; }
+
+  /* ── Scroll area ──────────────────────── */
+  .scroll-area {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: #F7F7F7;
+    border-radius: 24px 24px 0 0;
+  }
+
+  /* ── Section divider ──────────────────── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px 10px;
+  }
+  .section-head-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .section-head-action {
+    font-size: 10px;
+    font-weight: 600;
+    color: #0D0D0D;
+    background: none;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    cursor: default;
+  }
+
+  /* ── Item row — spacious, minimal ────── */
+  .item-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 22px;
+    gap: 14px;
+    background: #fff;
+    margin: 0 10px 6px;
+    border-radius: 18px;
+    min-height: 64px;
+  }
+
+  /* Category dot */
+  .cat-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .item-info { flex: 1; min-width: 0; }
+  .item-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0D0D0D;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .item-name.struck {
+    text-decoration: line-through;
+    color: #ccc;
+  }
+  .item-detail {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  /* Right side of row */
+  .item-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .expiry {
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .exp-soon  { color: #E89600; }
+  .exp-warn  { color: #E04444; }
+  .exp-ok    { color: #22A65B; }
+
+  .cat-tag {
+    font-size: 10px;
+    font-weight: 600;
+    color: #bbb;
+  }
+
+  /* ── Check circle ─────────────────────── */
+  .check-wrap {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    border: 2px solid #E0E0E0;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .check-wrap.done {
+    background: #0D0D0D;
+    border-color: #0D0D0D;
+  }
+
+  /* ── Floating add row ─────────────────── */
+  .add-row {
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px 10px;
+    background: #F7F7F7;
+    flex-shrink: 0;
+  }
+  .add-input {
+    flex: 1;
+    background: #fff;
+    border: 1.5px solid #E8E8E8;
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #0D0D0D;
+    font-family: 'Poppins', sans-serif;
+  }
+  .add-btn {
+    background: #0D0D0D;
+    color: #FF3B30;
+    border: none;
+    border-radius: 14px;
+    padding: 0 18px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: default;
+  }
+
+  /* ── AI Banner ────────────────────────── */
+  .ai-banner {
+    margin: 6px 10px 8px;
+    background: #0D0D0D;
+    border-radius: 20px;
+    padding: 18px 20px;
+    flex-shrink: 0;
+  }
+  .ai-eyebrow {
+    display: flex; align-items: center; gap: 7px;
+    margin-bottom: 10px;
+  }
+  .ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #FF3B30; }
+  .ai-label {
+    font-size: 9px; font-weight: 700;
+    color: #FF3B30; letter-spacing: 1.2px; text-transform: uppercase;
+  }
+  .ai-text {
+    font-size: 12px; color: #ddd; line-height: 1.6; font-weight: 400;
+  }
+  .ai-btn {
+    margin-top: 14px; width: 100%;
+    background: #FF3B30; color: #FFFFFF;
+    border: none; border-radius: 14px;
+    padding: 11px 0; font-size: 12px; font-weight: 700;
+    font-family: 'Poppins', sans-serif; cursor: default;
+  }
+
+  /* ── Meal grid ────────────────────────── */
+  .meal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    padding: 6px 10px 10px;
+  }
+  .meal-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 13px 14px;
+    min-height: 68px;
+  }
+  .meal-card.planned { background: #0D0D0D; }
+  .meal-day {
+    font-size: 9px; font-weight: 700;
+    color: #ccc; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .meal-card.planned .meal-day { color: #FF3B30; }
+  .meal-name {
+    font-size: 12px; font-weight: 600; color: #0D0D0D;
+    margin-top: 6px; line-height: 1.3;
+  }
+  .meal-card.planned .meal-name { color: #fff; }
+  .meal-empty {
+    font-size: 11px; color: #ddd; margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* ── Agent ────────────────────────────── */
+  .agent-card {
+    margin: 6px 10px 7px;
+    background: #0D0D0D;
+    border-radius: 20px;
+    padding: 18px 20px;
+    flex-shrink: 0;
+  }
+  .agent-title {
+    font-size: 15px; font-weight: 700; color: #fff;
+    margin-bottom: 4px;
+  }
+  .agent-sub {
+    font-size: 11px; color: #555; line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .agent-url {
+    background: #1c1c1c;
+    border: 1px solid #262626;
+    border-radius: 12px;
+    padding: 10px 13px;
+    font-size: 10px;
+    color: #666;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+  }
+  .sched-label {
+    font-size: 9px; font-weight: 700; color: #444;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin: 12px 0 7px;
+  }
+  .sched-row { display: flex; gap: 5px; flex-wrap: wrap; }
+  .sched-chip {
+    padding: 5px 11px;
+    border-radius: 20px;
+    font-size: 10px; font-weight: 600;
+    border: 1px solid #262626;
+    background: #1c1c1c; color: #444;
+    font-family: 'Poppins', sans-serif; cursor: default;
+  }
+  .sched-chip.on { background: #FF3B30; border-color: #FF3B30; color: #FFFFFF; }
+  .send-btn {
+    margin-top: 14px; width: 100%; padding: 12px;
+    border-radius: 14px; border: none;
+    background: #FF3B30; color: #FFFFFF;
+    font-size: 12px; font-weight: 700;
+    font-family: 'Poppins', sans-serif; cursor: default;
+  }
+
+  /* Payload preview */
+  .payload-card {
+    background: #fff;
+    border-radius: 18px;
+    margin: 0 10px 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .payload-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px 8px;
+    border-bottom: 1px solid #F2F2F2;
+  }
+  .payload-lbl { font-size: 10px; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.8px; }
+  .copy-btn {
+    font-size: 10px; font-weight: 700; color: #0D0D0D;
+    background: #F2F2F3; border: none; border-radius: 8px;
+    padding: 4px 10px; font-family: 'Poppins', sans-serif; cursor: default;
+  }
+  .payload-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 18px;
+  }
+  .payload-item + .payload-item {
+    border-top: 1px solid #F8F8F8;
+  }
+  .payload-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .payload-name { font-size: 12px; font-weight: 600; color: #0D0D0D; }
+  .payload-qty { font-size: 11px; color: #bbb; margin-left: auto; }
+
+  /* ── Bottom Nav ───────────────────────── */
+  .bottom-nav {
+    display: flex;
+    background: #fff;
+    border-top: 1px solid #F0F0F0;
+    padding: 8px 8px 14px;
+    flex-shrink: 0;
+    gap: 3px;
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 3px;
+    padding: 7px 0; border-radius: 14px;
+  }
+  .nav-btn.active { background: #0D0D0D; }
+  .nav-icon { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .nav-lbl { font-size: 9px; font-weight: 600; color: #ccc; }
+  .nav-btn.active .nav-lbl { color: #FF3B30; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Grocery Manager &nbsp;·&nbsp; Design Preview v2</h1>
+</div>
+
+<div class="screens-row">
+
+  <!-- ════════════════════════════════════
+       SCREEN 1 — PANTRY
+  ═════════════════════════════════════ -->
+  <div class="screen-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="dyn-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="#0D0D0D"><rect x="0" y="4" width="2.5" height="6" rx="1"/><rect x="3.5" y="2.5" width="2.5" height="7.5" rx="1"/><rect x="7" y="1" width="2.5" height="9" rx="1"/><rect x="10.5" y="0" width="2.5" height="10" rx="1" opacity=".25"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.5" stroke="#0D0D0D" stroke-opacity=".3"/><rect x="19" y="3" width="2" height="4" rx="1" fill="#0D0D0D" fill-opacity=".35"/><rect x="1.5" y="1.5" width="13" height="7" rx="1.5" fill="#0D0D0D"/></svg>
+          </div>
+        </div>
+
+        <div class="header">
+          <div class="page-title">Pantry</div>
+          <div class="page-meta"><strong>6 items</strong> · 3 expiring soon</div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab tab-on">All</button>
+          <button class="tab tab-off">Produce</button>
+          <button class="tab tab-off">Dairy</button>
+          <button class="tab tab-off">Meat</button>
+        </div>
+
+        <div class="scroll-area">
+          <div class="section-head">
+            <span class="section-head-label">Expiring soon</span>
+          </div>
+
+          <div class="item-row">
+            <div class="cat-dot" style="background:#F59E0B"></div>
+            <div class="item-info">
+              <div class="item-name">Whole Milk</div>
+              <div class="item-detail">2 L · David</div>
+            </div>
+            <div class="item-right">
+              <span class="expiry exp-soon">Mar 18</span>
+              <span class="cat-tag">Dairy</span>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="cat-dot" style="background:#8B5CF6"></div>
+            <div class="item-info">
+              <div class="item-name">Sourdough Bread</div>
+              <div class="item-detail">1 loaf · Sarah</div>
+            </div>
+            <div class="item-right">
+              <span class="expiry exp-warn">Mar 16</span>
+              <span class="cat-tag">Bakery</span>
+            </div>
+          </div>
+
+          <div class="section-head">
+            <span class="section-head-label">All items</span>
+          </div>
+
+          <div class="item-row">
+            <div class="cat-dot" style="background:#22C55E"></div>
+            <div class="item-info">
+              <div class="item-name">Cherry Tomatoes</div>
+              <div class="item-detail">500 g · David</div>
+            </div>
+            <div class="item-right">
+              <span class="expiry exp-ok">Mar 20</span>
+              <span class="cat-tag">Produce</span>
+            </div>
+          </div>
+
+          <div class="item-row">
+            <div class="cat-dot" style="background:#EF4444"></div>
+            <div class="item-info">
+              <div class="item-name">Chicken Breast</div>
+              <div class="item-detail">800 g · Sarah</div>
+            </div>
+            <div class="item-right">
+              <span class="expiry exp-soon">Mar 17</span>
+              <span class="cat-tag">Meat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row">
+          <input class="add-input" placeholder="Add item to pantry…" readonly/>
+          <button class="add-btn">Add</button>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-btn active">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <span class="nav-lbl">Pantry</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+            <span class="nav-lbl">Shopping</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+            <span class="nav-lbl">Meals</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+            <span class="nav-lbl">Agent</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <span class="screen-label">Pantry</span>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SCREEN 2 — SHOPPING
+  ═════════════════════════════════════ -->
+  <div class="screen-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="dyn-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="#0D0D0D"><rect x="0" y="4" width="2.5" height="6" rx="1"/><rect x="3.5" y="2.5" width="2.5" height="7.5" rx="1"/><rect x="7" y="1" width="2.5" height="9" rx="1"/><rect x="10.5" y="0" width="2.5" height="10" rx="1" opacity=".25"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.5" stroke="#0D0D0D" stroke-opacity=".3"/><rect x="19" y="3" width="2" height="4" rx="1" fill="#0D0D0D" fill-opacity=".35"/><rect x="1.5" y="1.5" width="13" height="7" rx="1.5" fill="#0D0D0D"/></svg>
+          </div>
+        </div>
+
+        <div class="header">
+          <div class="page-title">Shopping</div>
+          <div class="page-meta"><strong>3 to buy</strong> · 1 in cart</div>
+        </div>
+
+        <div class="scroll-area">
+          <div class="section-head">
+            <span class="section-head-label">To buy</span>
+          </div>
+
+          <div class="item-row">
+            <div class="check-wrap"></div>
+            <div class="item-info">
+              <div class="item-name">Avocados</div>
+              <div class="item-detail">3 pcs · David</div>
+            </div>
+            <span class="cat-tag">Produce</span>
+          </div>
+
+          <div class="item-row">
+            <div class="check-wrap"></div>
+            <div class="item-info">
+              <div class="item-name">Feta Cheese</div>
+              <div class="item-detail">200 g · Sarah</div>
+            </div>
+            <span class="cat-tag">Dairy</span>
+          </div>
+
+          <div class="item-row">
+            <div class="check-wrap"></div>
+            <div class="item-info">
+              <div class="item-name">Spinach</div>
+              <div class="item-detail">1 bag · Sarah</div>
+            </div>
+            <span class="cat-tag">Produce</span>
+          </div>
+
+          <div class="section-head" style="padding-top:10px">
+            <span class="section-head-label">In cart</span>
+            <button class="section-head-action">Clear</button>
+          </div>
+
+          <div class="item-row" style="opacity:0.45">
+            <div class="check-wrap done">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="item-info">
+              <div class="item-name struck">Pasta Penne</div>
+              <div class="item-detail">500 g</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-row">
+          <input class="add-input" placeholder="Add item…" readonly/>
+          <button class="add-btn">Add</button>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <span class="nav-lbl">Pantry</span>
+          </div>
+          <div class="nav-btn active">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+            <span class="nav-lbl">Shopping</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+            <span class="nav-lbl">Meals</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+            <span class="nav-lbl">Agent</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <span class="screen-label">Shopping</span>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SCREEN 3 — MEAL PLAN
+  ═════════════════════════════════════ -->
+  <div class="screen-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="dyn-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="#0D0D0D"><rect x="0" y="4" width="2.5" height="6" rx="1"/><rect x="3.5" y="2.5" width="2.5" height="7.5" rx="1"/><rect x="7" y="1" width="2.5" height="9" rx="1"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.5" stroke="#0D0D0D" stroke-opacity=".3"/><rect x="19" y="3" width="2" height="4" rx="1" fill="#0D0D0D" fill-opacity=".35"/><rect x="1.5" y="1.5" width="13" height="7" rx="1.5" fill="#0D0D0D"/></svg>
+          </div>
+        </div>
+
+        <div class="header">
+          <div class="page-title">Meal Plan</div>
+          <div class="page-meta"><strong>4 of 7 days</strong> planned this week</div>
+        </div>
+
+        <div class="ai-banner">
+          <div class="ai-eyebrow">
+            <div class="ai-dot"></div>
+            <span class="ai-label">Claude AI</span>
+          </div>
+          <div class="ai-text">Plan meals for the week and I'll generate your shopping list automatically.</div>
+          <button class="ai-btn">✦ Generate Shopping List</button>
+        </div>
+
+        <div class="scroll-area">
+          <div class="section-head">
+            <span class="section-head-label">This week</span>
+          </div>
+          <div class="meal-grid">
+            <div class="meal-card planned">
+              <div class="meal-day">Mon</div>
+              <div class="meal-name">Grilled Chicken Salad</div>
+            </div>
+            <div class="meal-card">
+              <div class="meal-day">Tue</div>
+              <div class="meal-empty">+ Add meal</div>
+            </div>
+            <div class="meal-card planned">
+              <div class="meal-day">Wed</div>
+              <div class="meal-name">Pasta Arrabbiata</div>
+            </div>
+            <div class="meal-card">
+              <div class="meal-day">Thu</div>
+              <div class="meal-empty">+ Add meal</div>
+            </div>
+            <div class="meal-card planned">
+              <div class="meal-day">Fri</div>
+              <div class="meal-name">Salmon &amp; Veggies</div>
+            </div>
+            <div class="meal-card planned">
+              <div class="meal-day">Sat</div>
+              <div class="meal-name">Homemade Pizza</div>
+            </div>
+            <div class="meal-card" style="grid-column:1">
+              <div class="meal-day">Sun</div>
+              <div class="meal-empty">+ Add meal</div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <span class="nav-lbl">Pantry</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+            <span class="nav-lbl">Shopping</span>
+          </div>
+          <div class="nav-btn active">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+            <span class="nav-lbl">Meals</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+            <span class="nav-lbl">Agent</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <span class="screen-label">Meal Plan</span>
+  </div>
+
+  <!-- ════════════════════════════════════
+       SCREEN 4 — ORDER AGENT
+  ═════════════════════════════════════ -->
+  <div class="screen-wrapper">
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="dyn-island"></div>
+
+        <div class="status-bar">
+          <span class="status-time">9:41</span>
+          <div class="status-icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="#0D0D0D"><rect x="0" y="4" width="2.5" height="6" rx="1"/><rect x="3.5" y="2.5" width="2.5" height="7.5" rx="1"/><rect x="7" y="1" width="2.5" height="9" rx="1"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10" fill="none"><rect x=".5" y=".5" width="18" height="9" rx="2.5" stroke="#0D0D0D" stroke-opacity=".3"/><rect x="19" y="3" width="2" height="4" rx="1" fill="#0D0D0D" fill-opacity=".35"/><rect x="1.5" y="1.5" width="13" height="7" rx="1.5" fill="#0D0D0D"/></svg>
+          </div>
+        </div>
+
+        <div class="header">
+          <div class="page-title">Order Agent</div>
+          <div class="page-meta">Automated grocery ordering</div>
+        </div>
+
+        <div class="scroll-area" style="overflow-y:auto">
+          <div class="agent-card">
+            <div class="agent-title">Webhook Endpoint</div>
+            <div class="agent-sub">Sends your shopping list as JSON to your ordering agent on a schedule.</div>
+            <div class="agent-url">https://your-agent.com/order</div>
+            <div class="sched-label">Schedule</div>
+            <div class="sched-row">
+              <span class="sched-chip">Mon</span>
+              <span class="sched-chip">Wed</span>
+              <span class="sched-chip on">Fri</span>
+              <span class="sched-chip">Sun</span>
+              <span class="sched-chip">Daily</span>
+            </div>
+            <button class="send-btn">Send Order · 3 items</button>
+          </div>
+
+          <div class="payload-card">
+            <div class="payload-top">
+              <span class="payload-lbl">Payload Preview</span>
+              <button class="copy-btn">Copy JSON</button>
+            </div>
+            <div class="payload-item">
+              <div class="payload-dot" style="background:#22C55E"></div>
+              <span class="payload-name">Avocados</span>
+              <span class="payload-qty">3 pcs</span>
+            </div>
+            <div class="payload-item">
+              <div class="payload-dot" style="background:#F59E0B"></div>
+              <span class="payload-name">Feta Cheese</span>
+              <span class="payload-qty">200 g</span>
+            </div>
+            <div class="payload-item">
+              <div class="payload-dot" style="background:#22C55E"></div>
+              <span class="payload-name">Spinach</span>
+              <span class="payload-qty">1 bag</span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="bottom-nav">
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <span class="nav-lbl">Pantry</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+            <span class="nav-lbl">Shopping</span>
+          </div>
+          <div class="nav-btn">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+            <span class="nav-lbl">Meals</span>
+          </div>
+          <div class="nav-btn active">
+            <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+            <span class="nav-lbl">Agent</span>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <span class="screen-label">Order Agent</span>
+  </div>
+
+</div>
+</body>
+</html>

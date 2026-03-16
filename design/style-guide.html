@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grocery Manager — Style Guide v2.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Brand palette (immutable) ─────────────────────────────── */
+:root {
+  --lime:       #FF3B30;
+  --green:      #2DB217;
+  --yellow:     #EAB600;
+  --red:        #EE4747;
+  --font:       'Poppins', sans-serif;
+  --r-sm:       8px;
+  --r-md:       14px;
+  --r-lg:       18px;
+  --r-xl:       24px;
+  --r-pill:     999px;
+  --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+  --dur:        220ms;
+}
+
+/* ── Light mode ────────────────────────────────────────────── */
+:root, [data-theme="light"] {
+  --canvas:         #FFFFFF;
+  --canvas-sub:     #F8F8F8;
+  --surface:        #FFFFFF;
+  --surface-raised: #F2F2F3;
+  --surface-inset:  #EBEBEC;
+  --border:         #E8E8E8;
+  --border-strong:  #CCCCCC;
+  --text-1:         #0D0D0D;
+  --text-2:         #555555;
+  --text-3:         #999999;
+  --text-4:         #BBBBBB;
+  --text-inv:       #FFFFFF;
+  --mono-bg:        #F2F2F3;
+  --mono-text:      #555555;
+  --swatch-info:    #F4F4F4;
+  --shadow-hard:    4px 4px 0 #0D0D0D;
+  --shadow-hard-lg: 7px 7px 0 #0D0D0D;
+  --shadow-lime:    4px 4px 0 #0D0D0D;
+  --shadow-lime-lg: 7px 7px 0 #0D0D0D;
+  --shadow-red:     4px 4px 0 rgba(238,71,71,0.5);
+  --ghost-col:      rgba(0,0,0,0.045);
+  --sect-border:    #0D0D0D;
+  --zigzag-bg:      #0D0D0D;
+  --empty-bg:       #F8F8F8;
+  /* Red as readable text in light mode — dark crimson, 5.8:1 on white */
+  --lime-text:      #C41C1C;
+  --lime-label:     #C41C1C;
+}
+
+/* ── Dark mode ─────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --canvas:         #0D0D0D;
+  --canvas-sub:     #141414;
+  --surface:        #1A1A1A;
+  --surface-raised: #222222;
+  --surface-inset:  #2A2A2A;
+  --border:         #242424;
+  --border-strong:  #333333;
+  --text-1:         #F5F5F5;
+  --text-2:         #888888;
+  --text-3:         #505050;
+  --text-4:         #383838;
+  --text-inv:       #0D0D0D;
+  --mono-bg:        #1e1e1e;
+  --mono-text:      #666666;
+  --swatch-info:    #1e1e1e;
+  --shadow-hard:    4px 4px 0 #333333;
+  --shadow-hard-lg: 7px 7px 0 #333333;
+  --shadow-lime:    4px 4px 0 rgba(255,59,48,0.32);
+  --shadow-lime-lg: 7px 7px 0 rgba(255,59,48,0.44);
+  --shadow-red:     4px 4px 0 rgba(238,71,71,0.4);
+  --ghost-col:      rgba(255,59,48,0.07);
+  --sect-border:    #333333;
+  --lime-text:      #FF3B30;
+  --lime-label:     #FF3B30;
+  --zigzag-bg:      #333333;
+  --empty-bg:       #141414;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+html { background: var(--canvas); }
+body {
+  font-family: var(--font);
+  background: var(--canvas);
+  color: var(--text-1);
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Theme Toggle ──────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed; top: 24px; right: 28px; z-index: 200;
+  display: flex; align-items: center; gap: 10px;
+}
+.toggle-label {
+  font-size: 10px; font-weight: 600; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  transition: color var(--dur) var(--ease); user-select: none;
+}
+.toggle-track {
+  position: relative; width: 52px; height: 28px;
+  border-radius: 999px; background: var(--surface-raised);
+  border: 1.5px solid var(--border-strong); cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); flex-shrink: 0;
+}
+.toggle-track:hover { border-color: var(--lime-text); }
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%; background: var(--text-1);
+  transition: transform var(--dur) var(--ease), background var(--dur) var(--ease);
+  display: flex; align-items: center; justify-content: center; font-size: 11px; line-height: 1;
+}
+[data-theme="dark"]  .toggle-thumb { transform: translateX(0); }
+[data-theme="light"] .toggle-thumb { transform: translateX(24px); background: #0D0D0D; }
+[data-theme="dark"]  .toggle-track { background: #1e1e1e; border-color: #333; }
+[data-theme="light"] .toggle-track { background: #F0F0F0; border-color: #CCC; }
+
+/* ── Layout ────────────────────────────────────────────────── */
+.page { max-width: 1080px; margin: 0 auto; padding: 0 36px 120px; }
+
+/* ══════════════════════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════════════════════ */
+.hero {
+  display: grid; grid-template-columns: 1fr 196px;
+  border-bottom: 3px solid var(--sect-border);
+  margin-bottom: 64px;
+  transition: border-color var(--dur) var(--ease);
+}
+.hero-left {
+  padding: 48px 32px 44px 0;
+  border-right: 3px solid var(--sect-border);
+  transition: border-color var(--dur) var(--ease);
+}
+.hero-stamp {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--lime-text);
+  margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+}
+.hero-stamp::before { content: ''; width: 20px; height: 3px; background: var(--lime); flex-shrink: 0; }
+.hero-title {
+  font-size: clamp(4rem, 8vw, 6rem); font-weight: 900;
+  line-height: 0.88; letter-spacing: -0.04em; text-transform: uppercase;
+  color: var(--text-1); transition: color var(--dur) var(--ease);
+}
+.hero-title .acc { color: var(--lime-text); }
+.hero-tagline {
+  font-style: italic; font-size: 0.9375rem;
+  color: var(--text-2); margin-top: 22px; line-height: 1.65;
+  transition: color var(--dur) var(--ease);
+}
+.hero-right { display: flex; flex-direction: column; }
+.hero-spec {
+  flex: 1; padding: 16px 20px;
+  border-bottom: 3px solid var(--sect-border);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  transition: border-color var(--dur) var(--ease);
+}
+.hero-spec:last-child { border-bottom: none; flex: 0; padding-bottom: 16px; }
+.spec-key {
+  font-size: 0.57rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--text-3); margin-bottom: 3px;
+  font-family: monospace; transition: color var(--dur) var(--ease);
+}
+.spec-val {
+  font-size: 0.9375rem; font-weight: 800; letter-spacing: -0.02em;
+  text-transform: uppercase; color: var(--text-1);
+  transition: color var(--dur) var(--ease);
+}
+.spec-val.li { color: var(--lime-text); }
+
+/* ══════════════════════════════════════════════════════════════
+   ZIGZAG DIVIDER
+══════════════════════════════════════════════════════════════ */
+.zigzag {
+  height: 18px; margin: 64px 0;
+  background:
+    linear-gradient(135deg, var(--zigzag-bg) 25%, transparent 25%) -9px 0,
+    linear-gradient(225deg, var(--zigzag-bg) 25%, transparent 25%) -9px 0,
+    linear-gradient(315deg, var(--zigzag-bg) 25%, transparent 25%),
+    linear-gradient(45deg,  var(--zigzag-bg) 25%, transparent 25%);
+  background-size: 18px 18px;
+  background-color: var(--canvas);
+  opacity: 0.3;
+  transition: background-color var(--dur) var(--ease);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION BAR (Fractura-style numbered)
+══════════════════════════════════════════════════════════════ */
+.section { margin-bottom: 0; }
+.section-bar {
+  display: grid; grid-template-columns: 60px 1fr;
+  border-top: 3px solid var(--sect-border); margin-bottom: 32px;
+  transition: border-color var(--dur) var(--ease);
+}
+.section-num {
+  font-size: 3rem; font-weight: 900; color: var(--lime-text);
+  line-height: 1; padding: 10px 0 8px;
+  border-right: 3px solid var(--sect-border);
+  transition: border-color var(--dur) var(--ease);
+}
+.section-head { padding: 12px 0 10px 18px; }
+.section-name {
+  font-size: 1.875rem; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 0.01em; line-height: 1; color: var(--text-1);
+  transition: color var(--dur) var(--ease);
+}
+.section-desc {
+  font-size: 0.8125rem; color: var(--text-2); margin-top: 4px; line-height: 1.6;
+  transition: color var(--dur) var(--ease);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESIGN LANGUAGE CARDS (Blueprint DL grid)
+══════════════════════════════════════════════════════════════ */
+.dl-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 3px solid var(--sect-border);
+  transition: border-color var(--dur) var(--ease);
+}
+.dl-card {
+  padding: 22px 20px; position: relative;
+  border-right: 3px solid var(--sect-border);
+  border-bottom: 3px solid var(--sect-border);
+  background: var(--surface); overflow: hidden;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow 100ms, transform 100ms;
+  cursor: default;
+}
+.dl-card:nth-child(3n)    { border-right: none; }
+.dl-card:nth-child(n+4)   { border-bottom: none; }
+.dl-card:hover            { box-shadow: var(--shadow-lime); transform: translate(-2px,-2px); }
+.dl-ghost-num {
+  position: absolute; bottom: -14px; right: 4px;
+  font-size: 5rem; font-weight: 900;
+  color: var(--ghost-col); line-height: 1;
+  pointer-events: none; user-select: none;
+  transition: color var(--dur) var(--ease);
+}
+.dl-id   { font-family: monospace; font-size: 0.58rem; font-weight: 700; color: var(--lime-text); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+.dl-name { font-size: 1.125rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 4px; line-height: 1; color: var(--text-1); transition: color var(--dur) var(--ease); }
+.dl-val  { font-family: monospace; font-size: 0.7rem; font-weight: 700; color: var(--lime-text); margin-bottom: 7px; }
+.dl-desc { font-size: 0.775rem; color: var(--text-2); line-height: 1.6; transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   COLOR BAND (Fractura interactive)
+══════════════════════════════════════════════════════════════ */
+.color-band {
+  display: flex; height: 72px;
+  border: 3px solid var(--sect-border); overflow: hidden;
+  margin-bottom: 4px; cursor: default;
+  transition: border-color var(--dur) var(--ease);
+}
+.color-seg {
+  flex: 1; border-right: 3px solid var(--sect-border);
+  transition: flex 180ms ease, border-color var(--dur) var(--ease);
+  position: relative; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.color-seg:last-child { border-right: none; }
+.color-seg:hover      { flex: 3; }
+.cs-inner {
+  padding: 7px 10px; opacity: 0;
+  transition: opacity 160ms; pointer-events: none;
+}
+.color-seg:hover .cs-inner { opacity: 1; }
+.cs-name { font-size: 0.7rem; font-weight: 800; color: inherit; }
+.cs-hex  { font-size: 0.6rem; font-weight: 500; opacity: 0.75; font-family: monospace; }
+.color-label-row { display: flex; margin-bottom: 28px; }
+.cl-item {
+  flex: 1; font-size: 0.56rem; font-weight: 700; font-family: monospace;
+  color: var(--text-3); text-align: center; padding-top: 5px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  transition: color var(--dur) var(--ease);
+}
+
+/* ── Color pair blocks ─────────────────────────────────────── */
+.color-pairs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; margin-bottom: 28px; }
+.cp-block {
+  border: 3px solid var(--sect-border); padding: 12px 10px 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  transition: box-shadow 100ms, transform 100ms, border-color var(--dur) var(--ease); cursor: default;
+}
+.cp-block:hover { box-shadow: var(--shadow-hard); transform: translate(-2px,-2px); }
+.cp-swatch { width: 28px; height: 28px; border: 2px solid var(--sect-border); flex-shrink: 0; margin-bottom: 4px; transition: border-color var(--dur) var(--ease); }
+.cp-name { font-size: 0.6875rem; font-weight: 700; color: var(--text-1); transition: color var(--dur) var(--ease); }
+.cp-hex  { font-size: 0.6rem; font-family: monospace; color: var(--text-3); transition: color var(--dur) var(--ease); }
+.cp-role { font-size: 0.565rem; font-weight: 600; color: var(--text-3); margin-top: 1px; transition: color var(--dur) var(--ease); }
+
+/* ── Category dot palette ──────────────────────────────────── */
+.cat-dot-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.cat-dot-item { display: flex; align-items: center; gap: 7px; }
+.cat-dot-swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cat-dot-lbl { font-size: 11px; font-weight: 600; color: var(--text-2); transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+══════════════════════════════════════════════════════════════ */
+.type-wrap {
+  border: 3px solid var(--sect-border);
+  transition: border-color var(--dur) var(--ease);
+}
+.type-row {
+  display: grid; grid-template-columns: 150px 1fr 130px;
+  align-items: center; padding: 20px 24px;
+  border-bottom: 3px solid var(--sect-border); gap: 24px;
+  transition: border-color var(--dur) var(--ease);
+}
+.type-row:last-child { border-bottom: none; }
+.type-label { font-size: 10px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 1px; transition: color var(--dur) var(--ease); }
+.type-spec  { font-size: 10px; color: var(--text-3); margin-top: 3px; font-family: monospace; transition: color var(--dur) var(--ease); }
+.type-preview { color: var(--text-1); transition: color var(--dur) var(--ease); }
+.type-use { font-size: 10px; color: var(--text-3); font-weight: 500; transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   COMPONENT CARDS
+══════════════════════════════════════════════════════════════ */
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.comp-card {
+  background: var(--surface); border: 3px solid var(--sect-border);
+  padding: 26px 22px; position: relative; overflow: hidden;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow 100ms, transform 100ms;
+  cursor: default;
+}
+.comp-card:hover { box-shadow: var(--shadow-hard); transform: translate(-2px,-2px); }
+.comp-card::before {
+  content: attr(data-num);
+  position: absolute; bottom: -16px; right: 6px;
+  font-size: 5.5rem; font-weight: 900; line-height: 1;
+  color: var(--ghost-col); pointer-events: none; user-select: none;
+  transition: color var(--dur) var(--ease);
+}
+.comp-card-label {
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--lime-text); margin-bottom: 18px; font-family: monospace;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.btn {
+  font-family: var(--font); font-weight: 700;
+  border: none; cursor: default;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  transition: box-shadow 80ms, transform 80ms;
+}
+.btn:hover  { transform: translate(-2px,-2px); }
+.btn:active { transform: translate(3px,3px); }
+.btn-lg  { height: 52px; padding: 0 28px; border-radius: var(--r-pill); font-size: 15px; min-width: 140px; }
+.btn-md  { height: 44px; padding: 0 22px; border-radius: var(--r-pill); font-size: 13px; }
+.btn-sm  { height: 34px; padding: 0 16px; border-radius: var(--r-pill); font-size: 11px; }
+.btn-xs  { height: 28px; padding: 0 12px; border-radius: var(--r-pill); font-size: 10px; }
+.btn-primary  { background: #0D0D0D; color: #FF3B30; box-shadow: var(--shadow-hard); }
+.btn-primary:hover  { box-shadow: var(--shadow-hard-lg); }
+.btn-lime     { background: #FF3B30; color: #FFFFFF; box-shadow: var(--shadow-lime); }
+.btn-lime:hover     { box-shadow: var(--shadow-lime-lg); }
+.btn-outline  { background: transparent; color: var(--text-1); border: 2px solid var(--border-strong); box-shadow: var(--shadow-hard); transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow 80ms, transform 80ms; }
+.btn-ghost    { background: var(--surface-raised); color: var(--text-1); transition: background var(--dur) var(--ease), color var(--dur) var(--ease), box-shadow 80ms, transform 80ms; }
+.btn-danger   { background: #FFE5E5; color: #C62828; box-shadow: var(--shadow-red); }
+.btn-disabled { background: var(--surface-raised); color: var(--text-3); cursor: not-allowed; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.btn-disabled:hover, .btn-disabled:active { transform: none !important; box-shadow: none !important; }
+
+/* ── Inputs ────────────────────────────────────────────────── */
+.input-stack { display: flex; flex-direction: column; gap: 10px; }
+.input-field {
+  background: var(--surface-raised); border: 2px solid transparent;
+  border-radius: var(--r-md); padding: 12px 16px;
+  font-size: 15px; font-family: var(--font); color: var(--text-1);
+  height: 48px; width: 100%; outline: none;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.input-focus { background: var(--surface); border-color: #0D0D0D; }
+.input-error { background: var(--surface); border-color: var(--red); }
+.input-with-icon { position: relative; }
+.input-with-icon .input-field { padding-left: 40px; }
+.input-icon-left {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-3); display: flex; pointer-events: none;
+  transition: color var(--dur) var(--ease);
+}
+
+/* ── Badges ────────────────────────────────────────────────── */
+.badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge {
+  display: inline-flex; align-items: center;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: 10px; font-weight: 700; font-family: var(--font); white-space: nowrap;
+}
+.badge-lime   { background: #FFE4E3; color: #C41C1C; }
+.badge-green  { background: #E5FFE0; color: #1a7a0a; }
+.badge-yellow { background: #FFF3CC; color: #7A5E00; }
+.badge-red    { background: #FFE5E5; color: #c62828; }
+.badge-grey   { background: var(--surface-raised); color: var(--text-2); transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.badge-black  { background: #0D0D0D; color: #FF3B30; }
+
+/* ── Chips / Filter Tabs ───────────────────────────────────── */
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  padding: 5px 14px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 600; font-family: var(--font);
+  cursor: default; border: 1.5px solid transparent;
+}
+.chip-on  { background: #0D0D0D; color: #FF3B30; border-color: #0D0D0D; }
+.chip-off { background: transparent; color: var(--text-3); border-color: var(--border); transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+
+/* ── Item Cards v2 ─────────────────────────────────────────── */
+.card-examples { display: flex; flex-direction: column; gap: 7px; }
+.item-card {
+  background: var(--surface); border-radius: 18px;
+  padding: 13px 18px; display: flex; align-items: center; gap: 14px;
+  min-height: 64px; transition: background var(--dur) var(--ease);
+}
+.item-cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 1px; }
+.item-card-name { font-size: 14px; font-weight: 600; color: var(--text-1); line-height: 1.2; transition: color var(--dur) var(--ease); }
+.item-card-name.struck { text-decoration: line-through; color: var(--text-4); }
+.item-card-sub { font-size: 11px; color: var(--text-3); margin-top: 3px; font-weight: 500; transition: color var(--dur) var(--ease); }
+.item-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; margin-left: auto; }
+.item-expiry { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.exp-ok   { color: #22A65B; }
+.exp-soon { color: #E89600; }
+.exp-warn { color: #E04444; }
+.item-cat-tag { font-size: 10px; font-weight: 600; color: var(--text-3); transition: color var(--dur) var(--ease); }
+.check-circle-ex {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: border-color var(--dur) var(--ease);
+}
+.check-circle-ex.done { background: #0D0D0D; border-color: #0D0D0D; }
+
+/* ── Swipe Row Preview ─────────────────────────────────────── */
+.swipe-preview {
+  position: relative; border-radius: 18px; overflow: hidden;
+  background: #EF4444;
+}
+.swipe-actions {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  display: flex; align-items: center; padding: 0 20px; gap: 6px;
+}
+.swipe-action {
+  font-size: 11px; font-weight: 700; color: #fff;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.swipe-item-shifted {
+  transform: translateX(-88px);
+  transition: transform 300ms var(--ease);
+}
+
+/* ── Notifications ─────────────────────────────────────────── */
+.notif-stack { display: flex; flex-direction: column; gap: 8px; }
+.notif {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface-inset); border-radius: var(--r-md);
+  padding: 12px 16px; border-left: 3px solid;
+  transition: background var(--dur) var(--ease);
+}
+.notif-icon  { font-size: 16px; flex-shrink: 0; }
+.notif-title { font-size: 12px; font-weight: 600; color: var(--text-1); transition: color var(--dur) var(--ease); }
+.notif-sub   { font-size: 10px; color: var(--text-2); margin-top: 1px; transition: color var(--dur) var(--ease); }
+.notif-close { font-size: 14px; color: var(--text-3); cursor: default; transition: color var(--dur) var(--ease); }
+.notif-lime   { border-color: #FF3B30; }
+.notif-yellow { border-color: #EAB600; }
+.notif-red    { border-color: #EE4747; }
+.notif-green  { border-color: #2DB217; }
+
+/* ── AI Banner ─────────────────────────────────────────────── */
+.ai-banner {
+  background: #0D0D0D; border-radius: var(--r-lg);
+  padding: 16px 18px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 14px;
+}
+.ai-pulse {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--lime);
+  flex-shrink: 0; box-shadow: 0 0 8px var(--lime);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+.ai-eyebrow { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--lime-text); margin-bottom: 3px; }
+.ai-text { font-size: 13px; font-weight: 600; color: #F5F5F5; }
+.ai-tag {
+  background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.25);
+  border-radius: 6px; padding: 3px 8px;
+  font-size: 10px; font-weight: 700; color: var(--lime-text);
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── Bottom Nav Preview ────────────────────────────────────── */
+.nav-preview {
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--r-xl); padding: 10px 8px 14px;
+  display: flex; gap: 4px; max-width: 320px;
+  box-shadow: var(--shadow-hard);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.nav-item-ex { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 6px; border-radius: 14px; }
+.nav-item-ex.on { background: #0D0D0D; }
+.nav-item-lbl { font-size: 9px; font-weight: 600; color: var(--text-3); transition: color var(--dur) var(--ease); }
+.nav-item-ex.on .nav-item-lbl { color: #FF3B30; }
+
+/* ── Sheet Modal Preview ───────────────────────────────────── */
+.sheet-preview {
+  background: var(--surface); border: 3px solid var(--sect-border);
+  border-radius: var(--r-xl); padding: 20px;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.sheet-handle {
+  width: 36px; height: 4px; background: var(--border-strong);
+  border-radius: 2px; margin: 0 auto 16px;
+  transition: background var(--dur) var(--ease);
+}
+.sheet-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; background: var(--surface-raised);
+  border-radius: var(--r-md); margin-bottom: 8px;
+  transition: background var(--dur) var(--ease);
+}
+.sheet-row-label { font-size: 11px; font-weight: 600; color: var(--text-3); width: 60px; flex-shrink: 0; transition: color var(--dur) var(--ease); }
+.sheet-row-val { font-size: 13px; font-weight: 600; color: var(--text-1); transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY STATES
+══════════════════════════════════════════════════════════════ */
+.empty-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.empty-card {
+  background: var(--empty-bg); border: 3px solid var(--sect-border);
+  border-radius: 0; padding: 40px 32px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  position: relative; overflow: hidden;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow 100ms, transform 100ms;
+  cursor: default;
+}
+.empty-card:hover { box-shadow: var(--shadow-hard); transform: translate(-2px,-2px); }
+.empty-card-tag {
+  font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--lime-text); font-family: monospace;
+  margin-bottom: 24px; align-self: flex-start;
+}
+.empty-img {
+  width: auto; height: 130px; margin-bottom: 24px;
+  filter: var(--img-filter, none);
+}
+[data-theme="dark"] .empty-img { filter: none; }
+.empty-title {
+  font-size: 1.125rem; font-weight: 800; color: var(--text-1);
+  letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2;
+  transition: color var(--dur) var(--ease);
+}
+.empty-desc {
+  font-size: 0.8125rem; color: var(--text-2); line-height: 1.6;
+  max-width: 260px; margin: 0 auto 22px;
+  transition: color var(--dur) var(--ease);
+}
+.empty-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #0D0D0D; color: #FF3B30;
+  font-family: var(--font); font-size: 12px; font-weight: 700;
+  padding: 10px 20px; border-radius: var(--r-pill);
+  box-shadow: var(--shadow-lime); border: none; cursor: default;
+  transition: box-shadow 80ms, transform 80ms;
+}
+.empty-cta:hover { box-shadow: var(--shadow-lime-lg); transform: translate(-2px,-2px); }
+/* Light mode: flip to red bg + white text for proper contrast */
+[data-theme="light"] .empty-cta {
+  background: #FF3B30; color: #FFFFFF;
+  box-shadow: var(--shadow-hard);
+}
+[data-theme="light"] .empty-cta:hover { box-shadow: var(--shadow-hard-lg); }
+.empty-ghost {
+  position: absolute; bottom: -20px; right: 8px;
+  font-size: 5rem; font-weight: 900; line-height: 1;
+  color: var(--ghost-col); pointer-events: none; user-select: none;
+  transition: color var(--dur) var(--ease);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SPACING + RADIUS
+══════════════════════════════════════════════════════════════ */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+@media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+.sub-label {
+  font-size: 10px; font-weight: 700; color: var(--text-2);
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;
+  transition: color var(--dur) var(--ease);
+}
+.spacing-row { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.spacing-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.spacing-box  { background: #FF3B30; border-radius: 4px; width: 36px; }
+.spacing-val  { font-size: 10px; color: var(--text-1); font-weight: 700; font-family: monospace; transition: color var(--dur) var(--ease); }
+.spacing-lbl  { font-size: 9px; color: var(--text-2); font-weight: 600; transition: color var(--dur) var(--ease); }
+.radius-row   { display: flex; gap: 14px; flex-wrap: wrap; }
+.radius-item  { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.radius-box   { width: 64px; height: 64px; background: var(--surface-raised); border: 2px solid var(--border-strong); transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.radius-lbl   { font-size: 9px; color: var(--text-2); font-weight: 600; transition: color var(--dur) var(--ease); }
+.radius-val   { font-size: 10px; color: var(--text-1); font-weight: 700; font-family: monospace; transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE RULES
+══════════════════════════════════════════════════════════════ */
+.rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+.rule-card {
+  background: var(--surface); border: 3px solid var(--sect-border);
+  padding: 22px 20px; position: relative; overflow: hidden;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow 100ms, transform 100ms; cursor: default;
+}
+.rule-card:hover { box-shadow: var(--shadow-hard); transform: translate(-2px,-2px); }
+.rule-ghost {
+  position: absolute; bottom: -20px; right: 4px;
+  font-size: 6rem; font-weight: 900; line-height: 1;
+  color: var(--ghost-col); pointer-events: none; user-select: none;
+  transition: color var(--dur) var(--ease);
+}
+.rule-number { font-size: 28px; font-weight: 900; color: var(--lime-text); line-height: 1; margin-bottom: 6px; }
+.rule-title  { font-size: 12px; font-weight: 700; color: var(--text-1); margin-bottom: 4px; transition: color var(--dur) var(--ease); }
+.rule-desc   { font-size: 10px; color: var(--text-2); line-height: 1.7; font-weight: 400; transition: color var(--dur) var(--ease); }
+
+/* ══════════════════════════════════════════════════════════════
+   TOKEN TABLE
+══════════════════════════════════════════════════════════════ */
+.token-wrap { border: 3px solid var(--sect-border); overflow: hidden; transition: border-color var(--dur) var(--ease); }
+.token-table { width: 100%; border-collapse: collapse; }
+.token-table th {
+  font-family: monospace; font-size: 0.675rem; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-3); font-weight: 700;
+  text-align: left; padding: 9px 14px;
+  border-bottom: 3px solid var(--sect-border);
+  background: var(--surface-raised);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.token-table td {
+  font-family: monospace; font-size: 0.775rem; padding: 9px 14px;
+  border-bottom: 2px solid var(--border); vertical-align: middle; color: var(--text-2);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.token-table tr:last-child td { border-bottom: none; }
+.token-table tr:hover td     { background: var(--surface-raised); }
+.token-name    { color: var(--lime) !important; }
+.token-swatch  { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--border-strong); vertical-align: middle; margin-right: 8px; transition: border-color var(--dur) var(--ease); }
+.copy-btn { background: none; border: none; cursor: pointer; padding: 4px 8px; font-family: monospace; font-size: 0.675rem; color: var(--text-3); border-radius: 4px; transition: all 120ms; }
+.copy-btn:hover  { background: var(--surface-raised); color: var(--lime-text); }
+.copy-btn.copied { color: var(--lime-text); }
+
+/* ── Toast ─────────────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: #0D0D0D; color: #FF3B30;
+  font-family: monospace; font-size: 0.8rem;
+  padding: 10px 16px; border: 2px solid var(--lime);
+  opacity: 0; transform: translateY(8px);
+  transition: all 200ms; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* ── Note ──────────────────────────────────────────────────── */
+.note { font-size: 10px; color: var(--text-3); line-height: 2; margin-top: 14px; transition: color var(--dur) var(--ease); }
+.note strong { color: var(--lime-text); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- ── Theme Toggle ──────────────────────────────────────────── -->
+<div class="theme-toggle" id="themeToggle" title="Toggle light / dark mode">
+  <span class="toggle-label" id="toggleLabel">Dark</span>
+  <div class="toggle-track" role="switch" aria-checked="true" tabindex="0">
+    <div class="toggle-thumb" id="toggleThumb">🌙</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ══ HERO ═════════════════════════════════════════════════════ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-stamp">Style Guide · v2.2 · March 2026</div>
+      <div class="hero-title">GROCERY<br><span class="acc">MAN</span>AGER</div>
+      <div class="hero-tagline">Mobile-first · High-contrast · Touch-first<br>Poppins · #0D0D0D + #FF3B30</div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-spec"><div class="spec-key">Typeface</div><div class="spec-val">Poppins</div></div>
+      <div class="hero-spec"><div class="spec-key">Viewport</div><div class="spec-val">390px</div></div>
+      <div class="hero-spec"><div class="spec-key">Accent</div><div class="spec-val li">#FF3B30</div></div>
+      <div class="hero-spec"><div class="spec-key">Version</div><div class="spec-val">2.2</div></div>
+    </div>
+  </div>
+
+
+  <!-- ══ 01 — DESIGN LANGUAGE ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">01</div>
+      <div class="section-head">
+        <div class="section-name">Design Language</div>
+        <div class="section-desc">Six principles that define every interaction, layout, and visual decision in the app.</div>
+      </div>
+    </div>
+
+    <div class="dl-grid">
+      <div class="dl-card">
+        <div class="dl-ghost-num">01</div>
+        <div class="dl-id">Principle · 01</div>
+        <div class="dl-name">Personality</div>
+        <div class="dl-val">Minimal · Confident</div>
+        <div class="dl-desc">Not a productivity tool, not a scanner. A quiet, tasteful kitchen companion. High contrast, no noise.</div>
+      </div>
+      <div class="dl-card">
+        <div class="dl-ghost-num">02</div>
+        <div class="dl-id">Principle · 02</div>
+        <div class="dl-name">Accent</div>
+        <div class="dl-val">#FF3B30 — Vivid Red</div>
+        <div class="dl-desc">Single accent color. Reserved for active states, AI features, and primary CTAs only. Never decorative.</div>
+      </div>
+      <div class="dl-card">
+        <div class="dl-ghost-num">03</div>
+        <div class="dl-id">Principle · 03</div>
+        <div class="dl-name">Typography</div>
+        <div class="dl-val">Poppins 400–900</div>
+        <div class="dl-desc">One font family. Geometric, rounded. Negative tracking at display sizes. 15px minimum for all inputs.</div>
+      </div>
+      <div class="dl-card">
+        <div class="dl-ghost-num">04</div>
+        <div class="dl-id">Principle · 04</div>
+        <div class="dl-name">Category</div>
+        <div class="dl-val">8px Colored Dot</div>
+        <div class="dl-desc">Category identity lives in an 8px dot in list rows — not emoji boxes. Color only; no labels in tight rows.</div>
+      </div>
+      <div class="dl-card">
+        <div class="dl-ghost-num">05</div>
+        <div class="dl-id">Principle · 05</div>
+        <div class="dl-name">Mode</div>
+        <div class="dl-val">Dark-first</div>
+        <div class="dl-desc">Base on #0D0D0D canvas. Surfaces on #1A1A1A. Lime pops hard against dark. Light mode fully supported.</div>
+      </div>
+      <div class="dl-card">
+        <div class="dl-ghost-num">06</div>
+        <div class="dl-id">Principle · 06</div>
+        <div class="dl-name">Touch</div>
+        <div class="dl-val">44px · Swipe · dvh</div>
+        <div class="dl-desc">44px minimum touch targets. Swipe-to-delete on every list row. 100dvh + env() safe areas throughout.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 02 — COLOR ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">02</div>
+      <div class="section-head">
+        <div class="section-name">Color</div>
+        <div class="section-desc">Minimal palette — black, lime, and four semantic signal colors. Hover each band segment to inspect.</div>
+      </div>
+    </div>
+
+    <div class="color-band">
+      <div class="color-seg" style="background:#0D0D0D">
+        <div class="cs-inner" style="color:#FF3B30"><div class="cs-name">Black</div><div class="cs-hex">#0D0D0D</div></div>
+      </div>
+      <div class="color-seg" style="background:#FF3B30">
+        <div class="cs-inner" style="color:#FFFFFF"><div class="cs-name">Red</div><div class="cs-hex">#FF3B30</div></div>
+      </div>
+      <div class="color-seg" style="background:#2DB217">
+        <div class="cs-inner" style="color:#fff"><div class="cs-name">Green</div><div class="cs-hex">#2DB217</div></div>
+      </div>
+      <div class="color-seg" style="background:#EAB600">
+        <div class="cs-inner" style="color:#fff"><div class="cs-name">Yellow</div><div class="cs-hex">#EAB600</div></div>
+      </div>
+      <div class="color-seg" style="background:#EE4747">
+        <div class="cs-inner" style="color:#fff"><div class="cs-name">Red</div><div class="cs-hex">#EE4747</div></div>
+      </div>
+      <div class="color-seg" style="background:#777777">
+        <div class="cs-inner" style="color:#fff"><div class="cs-name">Grey</div><div class="cs-hex">#777777</div></div>
+      </div>
+      <div class="color-seg" style="background:#FFFFFF">
+        <div class="cs-inner" style="color:#0D0D0D"><div class="cs-name">White</div><div class="cs-hex">#FFFFFF</div></div>
+      </div>
+    </div>
+    <div class="color-label-row">
+      <div class="cl-item">Primary</div>
+      <div class="cl-item">Accent</div>
+      <div class="cl-item">Success</div>
+      <div class="cl-item">Warning</div>
+      <div class="cl-item">Error</div>
+      <div class="cl-item">Text-2</div>
+      <div class="cl-item">Surface</div>
+    </div>
+
+    <div class="color-pairs">
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#0D0D0D"></div>
+        <div class="cp-name">Black</div><div class="cp-hex">#0D0D0D</div><div class="cp-role">Primary · CTA · Text</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#FF3B30"></div>
+        <div class="cp-name">Red Accent</div><div class="cp-hex">#FF3B30</div><div class="cp-role">Active · AI · Accent</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#2DB217"></div>
+        <div class="cp-name">Green</div><div class="cp-hex">#2DB217</div><div class="cp-role">Success · In cart</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#EAB600"></div>
+        <div class="cp-name">Yellow</div><div class="cp-hex">#EAB600</div><div class="cp-role">Warning · Expiring</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#EE4747"></div>
+        <div class="cp-name">Red</div><div class="cp-hex">#EE4747</div><div class="cp-role">Error · Expired · Delete</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#F8F8F8;border-color:var(--border-strong)"></div>
+        <div class="cp-name">Off-white</div><div class="cp-hex">#F8F8F8</div><div class="cp-role">App background</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#FFFFFF;border-color:var(--border-strong)"></div>
+        <div class="cp-name">White</div><div class="cp-hex">#FFFFFF</div><div class="cp-role">Cards · Nav · Surface</div>
+      </div>
+      <div class="cp-block">
+        <div class="cp-swatch" style="background:#F2F2F3;border-color:var(--border-strong)"></div>
+        <div class="cp-name">Grey Accent</div><div class="cp-hex">#F2F2F3</div><div class="cp-role">Input bg · Chips</div>
+      </div>
+    </div>
+
+    <div class="sub-label">Category Identity Dots</div>
+    <div class="cat-dot-row">
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#22C55E"></div><span class="cat-dot-lbl">Produce</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#F59E0B"></div><span class="cat-dot-lbl">Dairy</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#EF4444"></div><span class="cat-dot-lbl">Meat</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#8B5CF6"></div><span class="cat-dot-lbl">Bakery</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#3B82F6"></div><span class="cat-dot-lbl">Frozen</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#F97316"></div><span class="cat-dot-lbl">Pantry</span></div>
+      <div class="cat-dot-item"><div class="cat-dot-swatch" style="background:#6B7280"></div><span class="cat-dot-lbl">Household</span></div>
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 03 — TYPOGRAPHY ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">03</div>
+      <div class="section-head">
+        <div class="section-name">Typography — Poppins</div>
+        <div class="section-desc">Single typeface. Negative tracking at display sizes. Uppercase + wide tracking for meta labels.</div>
+      </div>
+    </div>
+
+    <div class="type-wrap">
+      <div class="type-row">
+        <div><div class="type-label">Display</div><div class="type-spec">42px / 800 / -1.5px</div></div>
+        <div class="type-preview" style="font-size:38px;font-weight:800;letter-spacing:-1.5px;line-height:1">Grocery Manager</div>
+        <div class="type-use">App name · Hero</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">H1 · Page Title</div><div class="type-spec">26px / 800 / -0.5px</div></div>
+        <div class="type-preview" style="font-size:26px;font-weight:800;letter-spacing:-0.5px">Pantry</div>
+        <div class="type-use">Tab page headers</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">H2 · Section</div><div class="type-spec">18px / 700</div></div>
+        <div class="type-preview" style="font-size:18px;font-weight:700">Expiring Soon</div>
+        <div class="type-use">Section headings</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">Label · Caps</div><div class="type-spec">10px / 700 / 2px / UPPER</div></div>
+        <div class="type-preview" style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#777777">TO BUY · 3 ITEMS</div>
+        <div class="type-use">Section labels</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">Body · Item Name</div><div class="type-spec">13–14px / 600</div></div>
+        <div class="type-preview" style="font-size:14px;font-weight:600">Whole Milk · 2 L · David</div>
+        <div class="type-use">List item names</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">Caption / Meta</div><div class="type-spec">11px / 500</div></div>
+        <div class="type-preview" style="font-size:11px;font-weight:500;color:#777777">6 items · 3 expiring soon</div>
+        <div class="type-use">Sub-labels · Dates</div>
+      </div>
+      <div class="type-row">
+        <div><div class="type-label">Badge / Chip</div><div class="type-spec">10px / 700</div></div>
+        <div class="type-preview" style="font-size:10px;font-weight:700;color:var(--lime-text)">Mar 20 · AI ✨ · Produce</div>
+        <div class="type-use">Badges · Filter chips</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 04 — COMPONENTS ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">04</div>
+      <div class="section-head">
+        <div class="section-name">Components</div>
+        <div class="section-desc">All interactive atoms. Buttons have hard-offset shadows. Cards lift on hover via translate + shadow grow.</div>
+      </div>
+    </div>
+
+    <div class="comp-grid">
+
+      <!-- Buttons -->
+      <div class="comp-card" data-num="01">
+        <div class="comp-card-label">Buttons</div>
+        <div class="btn-row" style="margin-bottom:14px">
+          <button class="btn btn-lg btn-primary">Add to Cart</button>
+          <button class="btn btn-lg btn-lime">Generate List</button>
+        </div>
+        <div class="btn-row" style="margin-bottom:12px">
+          <button class="btn btn-md btn-primary">Confirm</button>
+          <button class="btn btn-md btn-outline">Cancel</button>
+          <button class="btn btn-md btn-ghost">View</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-sm btn-primary">Add</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+          <button class="btn btn-sm btn-disabled">Unavailable</button>
+          <button class="btn btn-xs btn-lime">✨ AI</button>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div class="comp-card" data-num="02">
+        <div class="comp-card-label">Inputs</div>
+        <div class="input-stack">
+          <div class="input-with-icon">
+            <div class="input-icon-left">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+            </div>
+            <input class="input-field" placeholder="Search pantry…" readonly/>
+          </div>
+          <input class="input-field input-focus" value="Whole Milk" readonly/>
+          <input class="input-field input-error" value="Invalid item" readonly/>
+          <input class="input-field" placeholder="Add item to pantry…" readonly/>
+        </div>
+      </div>
+
+      <!-- Badges & Chips -->
+      <div class="comp-card" data-num="03">
+        <div class="comp-card-label">Badges &amp; Chips</div>
+        <div class="badge-row" style="margin-bottom:14px">
+          <span class="badge badge-lime">Mar 20</span>
+          <span class="badge badge-yellow">Mar 18</span>
+          <span class="badge badge-red">Mar 16</span>
+          <span class="badge badge-green">Fresh</span>
+          <span class="badge badge-black">AI ✨</span>
+          <span class="badge badge-grey">David</span>
+        </div>
+        <div class="chip-row">
+          <button class="chip chip-on">All</button>
+          <button class="chip chip-off">Produce</button>
+          <button class="chip chip-off">Dairy</button>
+          <button class="chip chip-off">Meat</button>
+          <button class="chip chip-off">Bakery</button>
+        </div>
+        <div class="note">
+          Active: <strong>black fill + lime text</strong> · Inactive: transparent + <strong>1.5px border</strong><br/>
+          Category identity: <strong>8px dot</strong> in list rows — not chip icons.
+        </div>
+      </div>
+
+      <!-- Notifications / Toast -->
+      <div class="comp-card" data-num="04">
+        <div class="comp-card-label">Notifications</div>
+        <div class="notif-stack">
+          <div class="notif notif-lime">
+            <div class="notif-icon">✨</div>
+            <div><div class="notif-title">12 items added by Claude AI</div><div class="notif-sub">From 4 planned meals</div></div>
+            <span class="notif-close" style="margin-left:auto">×</span>
+          </div>
+          <div class="notif notif-green">
+            <div class="notif-icon">✓</div>
+            <div><div class="notif-title">Order dispatched</div><div class="notif-sub">Friday schedule · 3 items</div></div>
+            <span class="notif-close" style="margin-left:auto">×</span>
+          </div>
+          <div class="notif notif-yellow">
+            <div class="notif-icon">⚠</div>
+            <div><div class="notif-title">3 items expiring soon</div><div class="notif-sub">Bread, Milk, Chicken</div></div>
+            <span class="notif-close" style="margin-left:auto">×</span>
+          </div>
+          <div class="notif notif-red">
+            <div class="notif-icon">✗</div>
+            <div><div class="notif-title">Webhook failed</div><div class="notif-sub">Server error 500</div></div>
+            <span class="notif-close" style="margin-left:auto">×</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- List Items v2 + Swipe -->
+      <div class="comp-card" data-num="05">
+        <div class="comp-card-label">List Items — v2</div>
+        <div class="card-examples">
+          <!-- Pantry item with expiry dot -->
+          <div class="item-card">
+            <div class="item-cat-dot" style="background:#F59E0B"></div>
+            <div style="flex:1;min-width:0">
+              <div class="item-card-name">Whole Milk</div>
+              <div class="item-card-sub">2 L · David</div>
+            </div>
+            <div class="item-card-right">
+              <span class="item-expiry exp-soon">Mar 18</span>
+              <span class="item-cat-tag">Dairy</span>
+            </div>
+          </div>
+          <!-- Shopping unchecked -->
+          <div class="item-card">
+            <div class="check-circle-ex"></div>
+            <div style="flex:1;min-width:0">
+              <div class="item-card-name">Avocados</div>
+              <div class="item-card-sub">3 pcs · David</div>
+            </div>
+            <span class="item-cat-tag">Produce</span>
+          </div>
+          <!-- Shopping checked / in cart -->
+          <div class="item-card" style="opacity:0.45">
+            <div class="check-circle-ex done">
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#FF3B30" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div class="item-card-name struck">Pasta Penne</div>
+              <div class="item-card-sub">500 g</div>
+            </div>
+          </div>
+          <!-- Swipe-to-delete state -->
+          <div class="swipe-preview">
+            <div class="swipe-actions">
+              <div class="swipe-action">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M2 4h12M6 4V2h4v2M5 4l1 9h4l1-9"/></svg>
+                <span>Delete</span>
+              </div>
+            </div>
+            <div class="item-card swipe-item-shifted" style="margin:0;border-radius:18px">
+              <div class="item-cat-dot" style="background:#3B82F6"></div>
+              <div style="flex:1;min-width:0">
+                <div class="item-card-name">Frozen Peas</div>
+                <div class="item-card-sub">300 g</div>
+              </div>
+              <div class="item-card-right">
+                <span class="item-expiry exp-ok">Mar 30</span>
+                <span class="item-cat-tag">Frozen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Banner + Sheet + Bottom Nav -->
+      <div class="comp-card" data-num="06">
+        <div class="comp-card-label">AI Banner · Sheet · Nav</div>
+
+        <div class="ai-banner">
+          <div class="ai-pulse"></div>
+          <div style="flex:1">
+            <div class="ai-eyebrow">Claude AI</div>
+            <div class="ai-text">Generate shopping list from meals</div>
+          </div>
+          <div class="ai-tag">✨ Ready</div>
+        </div>
+
+        <div class="sheet-preview" style="margin-bottom:14px">
+          <div class="sheet-handle"></div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+            <div style="width:44px;height:44px;border-radius:10px;background:rgba(245,158,11,0.12);border:2px solid #F59E0B;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <div style="width:10px;height:10px;border-radius:50%;background:#F59E0B"></div>
+            </div>
+            <div>
+              <div style="font-size:15px;font-weight:700;color:var(--text-1);transition:color var(--dur) var(--ease)">Whole Milk</div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:2px;transition:color var(--dur) var(--ease)">Dairy · 2 L · David</div>
+            </div>
+          </div>
+          <div class="sheet-row"><span class="sheet-row-label">Expires</span><span class="item-expiry exp-soon">Mar 18</span></div>
+          <div class="sheet-row"><span class="sheet-row-label">Category</span><span class="sheet-row-val">Dairy</span></div>
+        </div>
+
+        <div class="nav-preview">
+          <div class="nav-item-ex on">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+            <span class="nav-item-lbl">Pantry</span>
+          </div>
+          <div class="nav-item-ex">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+            <span class="nav-item-lbl">Shopping</span>
+          </div>
+          <div class="nav-item-ex">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+            <span class="nav-item-lbl">Meals</span>
+          </div>
+          <div class="nav-item-ex">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-3)"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            <span class="nav-item-lbl">Agent</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /comp-grid -->
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 05 — EMPTY STATES ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">05</div>
+      <div class="section-head">
+        <div class="section-name">Empty States</div>
+        <div class="section-desc">Each screen has a dedicated empty state with illustration, context-aware copy, and a single CTA.</div>
+      </div>
+    </div>
+
+    <div class="empty-grid">
+
+      <!-- Pantry empty -->
+      <div class="empty-card">
+        <div class="empty-ghost">P</div>
+        <div class="empty-card-tag">Pantry · Empty</div>
+        <img class="empty-img" src="empty states illustrations/Big Box.svg" alt="Empty pantry" />
+        <div class="empty-title">Your pantry is empty</div>
+        <div class="empty-desc">Start adding items you have at home — track quantities, expiry dates, and never run out again.</div>
+        <button class="empty-cta">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg>
+          Add first item
+        </button>
+      </div>
+
+      <!-- Shopping empty -->
+      <div class="empty-card">
+        <div class="empty-ghost">S</div>
+        <div class="empty-card-tag">Shopping · Empty</div>
+        <img class="empty-img" src="empty states illustrations/Full Trolley.svg" alt="Empty shopping list" />
+        <div class="empty-title">Shopping list is clear</div>
+        <div class="empty-desc">Your list is empty. Add items manually or let Claude generate a list based on your meal plan.</div>
+        <button class="empty-cta">✨ Generate from meals</button>
+      </div>
+
+      <!-- Meals empty -->
+      <div class="empty-card">
+        <div class="empty-ghost">M</div>
+        <div class="empty-card-tag">Meals · Empty</div>
+        <img class="empty-img" src="empty states illustrations/Cash Register.svg" alt="Empty meal plan" />
+        <div class="empty-title">No meals planned yet</div>
+        <div class="empty-desc">Plan your week's meals and Claude will automatically generate the shopping list you need.</div>
+        <button class="empty-cta">✨ Plan this week</button>
+      </div>
+
+      <!-- Agent empty -->
+      <div class="empty-card">
+        <div class="empty-ghost">A</div>
+        <div class="empty-card-tag">Agent · No Webhook</div>
+        <img class="empty-img" src="empty states illustrations/Enable Notification Illustration.svg" alt="Connect a webhook" />
+        <div class="empty-title">Connect your workflow</div>
+        <div class="empty-desc">Add a webhook URL to automatically dispatch your shopping list to any service — Make, Zapier, Notion.</div>
+        <button class="empty-cta">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          Set up agent
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 06 — SPACING & RADIUS ══════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">06</div>
+      <div class="section-head">
+        <div class="section-name">Spacing &amp; Radius</div>
+        <div class="section-desc">4px base grid. Row height minimum 60px. Pill on buttons and badges.</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="sub-label">Spacing Scale (4px base)</div>
+        <div class="spacing-row">
+          <div class="spacing-item"><div class="spacing-box" style="height:4px"></div><span class="spacing-val">4</span><span class="spacing-lbl">xs</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:8px"></div><span class="spacing-val">8</span><span class="spacing-lbl">sm</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:12px"></div><span class="spacing-val">12</span><span class="spacing-lbl">—</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:16px"></div><span class="spacing-val">16</span><span class="spacing-lbl">md</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:20px"></div><span class="spacing-val">20</span><span class="spacing-lbl">—</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:24px"></div><span class="spacing-val">24</span><span class="spacing-lbl">lg</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:32px"></div><span class="spacing-val">32</span><span class="spacing-lbl">xl</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:48px"></div><span class="spacing-val">48</span><span class="spacing-lbl">2xl</span></div>
+          <div class="spacing-item"><div class="spacing-box" style="height:64px"></div><span class="spacing-val">64</span><span class="spacing-lbl">3xl</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="sub-label">Border Radius</div>
+        <div class="radius-row">
+          <div class="radius-item"><div class="radius-box" style="border-radius:8px"></div><span class="radius-val">8px</span><span class="radius-lbl">sm</span></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:12px"></div><span class="radius-val">12px</span><span class="radius-lbl">md</span></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:14px"></div><span class="radius-val">14px</span><span class="radius-lbl">card</span></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:18px"></div><span class="radius-val">18px</span><span class="radius-lbl">lg</span></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:24px"></div><span class="radius-val">24px</span><span class="radius-lbl">sheet</span></div>
+          <div class="radius-item"><div class="radius-box" style="border-radius:999px"></div><span class="radius-val">pill</span><span class="radius-lbl">btn · badge</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 07 — MOBILE RULES ══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">07</div>
+      <div class="section-head">
+        <div class="section-name">Mobile-First Rules</div>
+        <div class="section-desc">Non-negotiable constraints for the 390px iPhone viewport. Break these and the app breaks on device.</div>
+      </div>
+    </div>
+
+    <div class="rules-grid">
+      <div class="rule-card">
+        <div class="rule-ghost">44</div>
+        <div class="rule-number">44px</div>
+        <div class="rule-title">Minimum Touch Target</div>
+        <div class="rule-desc">Every interactive element must have a 44×44px touch area. Use padding expansion for visually smaller elements like check buttons.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-ghost">15</div>
+        <div class="rule-number">15px</div>
+        <div class="rule-title">Min Input Font Size</div>
+        <div class="rule-desc">All inputs must use ≥ 15px to prevent iOS Safari auto-zoom on focus. Never go below this threshold anywhere.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-ghost">390</div>
+        <div class="rule-number">390px</div>
+        <div class="rule-title">Primary Viewport</div>
+        <div class="rule-desc">Design for iPhone 15 (390px) first. Test at 375px (SE minimum). Max content width: 430px centered.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-ghost">dvh</div>
+        <div class="rule-number">dvh</div>
+        <div class="rule-title">Use 100dvh not 100vh</div>
+        <div class="rule-desc">Dynamic viewport height accounts for browser chrome on mobile. Always use 100dvh for full-height containers.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-ghost">env</div>
+        <div class="rule-number">env()</div>
+        <div class="rule-title">Safe Area Insets</div>
+        <div class="rule-desc">Header: padding-top with safe-area-inset-top. Bottom nav + sheets: padding-bottom with safe-area-inset-bottom.</div>
+      </div>
+      <div class="rule-card">
+        <div class="rule-ghost">✦</div>
+        <div class="rule-number">touch</div>
+        <div class="rule-title">Touch Events First</div>
+        <div class="rule-desc">Swipe gestures: onTouchStart/Move/End. Every hover state must have an active/touch equivalent. No hover-only states.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="zigzag"></div>
+
+
+  <!-- ══ 08 — DEV TOKENS ════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-bar">
+      <div class="section-num">08</div>
+      <div class="section-head">
+        <div class="section-name">Dev Tokens</div>
+        <div class="section-desc">CSS custom properties. Click any row to copy the variable name to clipboard.</div>
+      </div>
+    </div>
+
+    <div class="token-wrap">
+      <table class="token-table">
+        <thead>
+          <tr><th>Token</th><th>Value (dark / light)</th><th>Swatch</th><th></th></tr>
+        </thead>
+        <tbody id="token-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+  /* ── Theme toggle ──────────────────────────────────────────── */
+  const html   = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const thumb  = document.getElementById('toggleThumb');
+  const label  = document.getElementById('toggleLabel');
+  const track  = toggle.querySelector('.toggle-track');
+
+  function setTheme(dark) {
+    html.dataset.theme = dark ? 'dark' : 'light';
+    thumb.textContent  = dark ? '🌙' : '☀️';
+    label.textContent  = dark ? 'Dark' : 'Light';
+    track.setAttribute('aria-checked', String(dark));
+    try { localStorage.setItem('sg-theme', dark ? 'dark' : 'light'); } catch(e) {}
+  }
+
+  try { const s = localStorage.getItem('sg-theme'); if (s) setTheme(s === 'dark'); } catch(e) {}
+
+  toggle.addEventListener('click',   () => setTheme(html.dataset.theme !== 'dark'));
+  toggle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTheme(html.dataset.theme !== 'dark'); }
+  });
+
+  /* ── Token table ───────────────────────────────────────────── */
+  const tokens = [
+    { name: '--lime',            value: '#FF3B30' },
+    { name: '--green',           value: '#2DB217' },
+    { name: '--yellow',          value: '#EAB600' },
+    { name: '--red',             value: '#EE4747' },
+    { name: '--canvas',          value: '#0D0D0D  /  #FFFFFF' },
+    { name: '--canvas-sub',      value: '#141414  /  #F8F8F8' },
+    { name: '--surface',         value: '#1A1A1A  /  #FFFFFF' },
+    { name: '--surface-raised',  value: '#222222  /  #F2F2F3' },
+    { name: '--surface-inset',   value: '#2A2A2A  /  #EBEBEC' },
+    { name: '--border',          value: '#242424  /  #E8E8E8' },
+    { name: '--border-strong',   value: '#333333  /  #CCCCCC' },
+    { name: '--text-1',          value: '#F5F5F5  /  #0D0D0D' },
+    { name: '--text-2',          value: '#888888  /  #555555' },
+    { name: '--text-3',          value: '#505050  /  #999999' },
+    { name: '--text-4',          value: '#383838  /  #BBBBBB' },
+    { name: '--r-sm',            value: '8px' },
+    { name: '--r-md',            value: '14px' },
+    { name: '--r-lg',            value: '18px' },
+    { name: '--r-xl',            value: '24px' },
+    { name: '--r-pill',          value: '999px' },
+    { name: '--shadow-hard',     value: '4px 4px 0 #0D0D0D  (light)' },
+    { name: '--shadow-lime',     value: '4px 4px 0 rgba(255,59,48,.32)' },
+    { name: '--ease',            value: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+    { name: '--dur',             value: '220ms' },
+  ];
+
+  const tbody = document.getElementById('token-body');
+  const toast = document.getElementById('toast');
+  let toastTimer;
+
+  tokens.forEach(t => {
+    const isColor = t.value.startsWith('#') && !t.value.includes('/');
+    const row = document.createElement('tr');
+    row.style.cursor = 'pointer';
+    row.innerHTML = `
+      <td class="token-name">${t.name}</td>
+      <td>${t.value}</td>
+      <td>${isColor ? `<span class="token-swatch" style="background:${t.value}"></span>` : '—'}</td>
+      <td><button class="copy-btn" data-val="${t.name}">copy</button></td>
+    `;
+    row.addEventListener('click', () => copyToken(t.name, row.querySelector('.copy-btn')));
+    tbody.appendChild(row);
+  });
+
+  function copyToken(val, btn) {
+    navigator.clipboard.writeText(val).then(() => {
+      btn.textContent = '✓'; btn.classList.add('copied');
+      clearTimeout(toastTimer);
+      toast.textContent = `Copied ${val}`;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+        btn.textContent = 'copy'; btn.classList.remove('copied');
+      }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
